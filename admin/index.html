@@ -34,6 +34,9 @@
   <!-- El CMS se cargará aquí automáticamente -->
   
   <script>
+    // Inicializar Decap CMS
+    CMS.init();
+    
     // Configuración de redirección post-login
     if (window.netlifyIdentity) {
       window.netlifyIdentity.on("init", user => {
