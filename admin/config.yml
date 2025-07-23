@@ -1,0 +1,237 @@
+# Configuración de Decap CMS para Colegio Liahona
+
+backend:
+  name: git-gateway
+  branch: main # Rama principal del repositorio
+  commit_messages:
+    create: 'Crear {{collection}} "{{slug}}"'
+    update: 'Actualizar {{collection}} "{{slug}}"'
+    delete: 'Eliminar {{collection}} "{{slug}}"'
+    uploadMedia: 'Subir "{{path}}"'
+    deleteMedia: 'Eliminar "{{path}}"'
+
+# Configuración local para desarrollo
+local_backend: true
+
+# Configuración de medios
+media_folder: "upload" # Donde se guardan los archivos subidos
+public_folder: "/upload" # URL pública de los archivos
+
+# Configuración del sitio
+site_url: https://colegioliahona.netlify.app
+display_url: https://colegioliahona.netlify.app
+logo_url: /upload/logo-1.png
+
+# Configuración de idioma
+locale: 'es'
+
+# Colecciones del CMS
+collections:
+  # Configuración general del sitio
+  - name: "configuracion"
+    label: "Configuración"
+    delete: false
+    editor:
+      preview: false
+    files:
+      - name: "general"
+        label: "Configuración General"
+        file: "_data/configuracion.yml"
+        fields:
+          - {label: "Título del Sitio", name: "titulo_sitio", widget: "string", default: "Colegio Liahona"}
+          - {label: "Descripción", name: "descripcion", widget: "text", default: "Formando líderes con valores cristianos"}
+          - {label: "Logo", name: "logo", widget: "image", allow_multiple: false}
+          - {label: "Favicon", name: "favicon", widget: "image", allow_multiple: false}
+          - label: "Información de Contacto"
+            name: "contacto"
+            widget: "object"
+            fields:
+              - {label: "Email General", name: "email", widget: "string"}
+              - {label: "Teléfono General", name: "telefono", widget: "string"}
+          - label: "Redes Sociales"
+            name: "redes_sociales"
+            widget: "object"
+            fields:
+              - {label: "Facebook", name: "facebook", widget: "string", required: false}
+              - {label: "Instagram", name: "instagram", widget: "string", required: false}
+              - {label: "YouTube", name: "youtube", widget: "string", required: false}
+              - {label: "LinkedIn", name: "linkedin", widget: "string", required: false}
+
+  # Colección de Sedes
+  - name: "sedes"
+    label: "Sedes"
+    folder: "_sedes"
+    create: true
+    slug: "{{slug}}"
+    fields:
+      - {label: "Nombre de la Sede", name: "title", widget: "string"}
+      - {label: "Slug", name: "slug", widget: "string"}
+      - {label: "Orden", name: "orden", widget: "number", default: 0}
+      - {label: "Activa", name: "activa", widget: "boolean", default: true}
+      - label: "Información de Contacto"
+        name: "contacto"
+        widget: "object"
+        fields:
+          - {label: "Dirección", name: "direccion", widget: "string"}
+          - {label: "Comuna", name: "comuna", widget: "string"}
+          - {label: "Ciudad", name: "ciudad", widget: "string"}
+          - {label: "Teléfono", name: "telefono", widget: "string"}
+          - {label: "Email", name: "email", widget: "string"}
+      - {label: "Descripción", name: "descripcion", widget: "text"}
+      - {label: "Imagen Principal", name: "imagen", widget: "image"}
+      - label: "Galería de Imágenes"
+        name: "galeria"
+        widget: "list"
+        field: {label: "Imagen", name: "imagen", widget: "image"}
+      - label: "Horarios"
+        name: "horarios"
+        widget: "object"
+        fields:
+          - {label: "Lunes a Viernes", name: "semana", widget: "string"}
+          - {label: "Sábado", name: "sabado", widget: "string", required: false}
+      - label: "Enlaces"
+        name: "enlaces"
+        widget: "object"
+        fields:
+          - {label: "Pago en Línea", name: "pago_online", widget: "string", required: false}
+          - {label: "Portal Académico", name: "portal_academico", widget: "string", required: false}
+      - {label: "Mapa (Google Maps Embed)", name: "mapa_embed", widget: "text", required: false}
+
+  # Colección de Noticias
+  - name: "noticias"
+    label: "Noticias"
+    folder: "_noticias"
+    create: true
+    slug: "{{year}}-{{month}}-{{day}}-{{slug}}"
+    fields:
+      - {label: "Título", name: "title", widget: "string"}
+      - {label: "Fecha", name: "date", widget: "datetime"}
+      - {label: "Autor", name: "autor", widget: "string", default: "Colegio Liahona"}
+      - {label: "Imagen Destacada", name: "imagen", widget: "image"}
+      - {label: "Resumen", name: "resumen", widget: "text", pattern: ['.{50,160}', "El resumen debe tener entre 50 y 160 caracteres"]}
+      - {label: "Contenido", name: "body", widget: "markdown"}
+      - label: "Categorías"
+        name: "categorias"
+        widget: "select"
+        multiple: true
+        options: ["Académico", "Deportes", "Cultura", "Pastoral", "Institucional", "Comunidad"]
+      - label: "Sedes Relacionadas"
+        name: "sedes"
+        widget: "relation"
+        collection: "sedes"
+        search_fields: ["title"]
+        value_field: "slug"
+        display_fields: ["title"]
+        multiple: true
+      - {label: "Destacada", name: "destacada", widget: "boolean", default: false}
+
+  # Colección de Eventos
+  - name: "eventos"
+    label: "Eventos"
+    folder: "_eventos"
+    create: true
+    slug: "{{year}}-{{month}}-{{day}}-{{slug}}"
+    fields:
+      - {label: "Título", name: "title", widget: "string"}
+      - {label: "Fecha del Evento", name: "fecha_evento", widget: "datetime"}
+      - {label: "Fecha de Fin (opcional)", name: "fecha_fin", widget: "datetime", required: false}
+      - {label: "Hora", name: "hora", widget: "string", default: "08:00"}
+      - {label: "Lugar", name: "lugar", widget: "string"}
+      - label: "Sede"
+        name: "sede"
+        widget: "relation"
+        collection: "sedes"
+        search_fields: ["title"]
+        value_field: "slug"
+        display_fields: ["title"]
+      - {label: "Descripción", name: "descripcion", widget: "text"}
+      - {label: "Imagen", name: "imagen", widget: "image", required: false}
+      - label: "Tipo de Evento"
+        name: "tipo"
+        widget: "select"
+        options: ["Académico", "Cultural", "Deportivo", "Pastoral", "Reunión de Apoderados", "Otro"]
+      - {label: "Requiere Inscripción", name: "requiere_inscripcion", widget: "boolean", default: false}
+      - {label: "Link de Inscripción", name: "link_inscripcion", widget: "string", required: false}
+
+  # Colección de Páginas
+  - name: "paginas"
+    label: "Páginas"
+    files:
+      - name: "inicio"
+        label: "Página de Inicio"
+        file: "_data/inicio.yml"
+        fields:
+          - label: "Banner Principal"
+            name: "banner"
+            widget: "object"
+            fields:
+              - {label: "Título", name: "titulo", widget: "string"}
+              - {label: "Subtítulo", name: "subtitulo", widget: "string"}
+              - {label: "Imagen de Fondo", name: "imagen", widget: "image"}
+              - {label: "Botón Texto", name: "boton_texto", widget: "string"}
+              - {label: "Botón URL", name: "boton_url", widget: "string"}
+          - label: "Sección Bienvenida"
+            name: "bienvenida"
+            widget: "object"
+            fields:
+              - {label: "Título", name: "titulo", widget: "string"}
+              - {label: "Contenido", name: "contenido", widget: "markdown"}
+              - {label: "Imagen", name: "imagen", widget: "image"}
+      
+      - name: "historia"
+        label: "Historia"
+        file: "_data/historia.yml"
+        fields:
+          - {label: "Título", name: "titulo", widget: "string"}
+          - {label: "Contenido", name: "contenido", widget: "markdown"}
+          - label: "Línea de Tiempo"
+            name: "timeline"
+            widget: "list"
+            fields:
+              - {label: "Año", name: "año", widget: "string"}
+              - {label: "Evento", name: "evento", widget: "string"}
+              - {label: "Descripción", name: "descripcion", widget: "text"}
+              - {label: "Imagen", name: "imagen", widget: "image", required: false}
+
+  # Colección de Equipo
+  - name: "equipo"
+    label: "Equipo"
+    folder: "_equipo"
+    create: true
+    slug: "{{slug}}"
+    fields:
+      - {label: "Nombre", name: "title", widget: "string"}
+      - {label: "Cargo", name: "cargo", widget: "string"}
+      - {label: "Email", name: "email", widget: "string", required: false}
+      - {label: "Teléfono", name: "telefono", widget: "string", required: false}
+      - {label: "Foto", name: "foto", widget: "image"}
+      - {label: "Biografía", name: "biografia", widget: "text"}
+      - label: "Sede"
+        name: "sede"
+        widget: "relation"
+        collection: "sedes"
+        search_fields: ["title"]
+        value_field: "slug"
+        display_fields: ["title"]
+        multiple: true
+      - label: "Área"
+        name: "area"
+        widget: "select"
+        options: ["Directivo", "Académico", "Administrativo", "Pastoral", "Apoyo"]
+      - {label: "Orden", name: "orden", widget: "number", default: 0}
+
+# Configuración del editor
+editor:
+  preview: true
+
+# Configuración de flujo de trabajo
+publish_mode: editorial_workflow
+
+# Configuración de búsqueda
+search: true
+
+# Configuración de slug
+slug:
+  encoding: "ascii"
+  clean_accents: true
+  sanitize_replacement: "-"
