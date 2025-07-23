@@ -1,0 +1,32 @@
+{
+  "name": "colegio-liahona-web",
+  "version": "1.0.0",
+  "description": "Sitio web oficial del Colegio Liahona",
+  "main": "index.html",
+  "scripts": {
+    "start": "python -m http.server 8000 || npx http-server",
+    "cms-local": "npx decap-server",
+    "dev": "npx concurrently \"npm run start\" \"npm run cms-local\""
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/fercastillo/liahona-web.git"
+  },
+  "keywords": [
+    "colegio",
+    "liahona",
+    "educacion",
+    "chile"
+  ],
+  "author": "Colegio Liahona",
+  "license": "UNLICENSED",
+  "bugs": {
+    "url": "https://github.com/fercastillo/liahona-web/issues"
+  },
+  "homepage": "https://github.com/fercastillo/liahona-web#readme",
+  "devDependencies": {
+    "concurrently": "^7.6.0",
+    "decap-server": "^3.0.0",
+    "http-server": "^14.1.1"
+  }
+}
